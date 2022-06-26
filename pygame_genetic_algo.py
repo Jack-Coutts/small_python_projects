@@ -4,6 +4,8 @@
 # Import and initialize the pygame library
 import pygame
 import random
+import math
+
 
 def create_first_gen(circle_num, step_num, screen_name):  # Create list of circle instances & list of steps per circle
 
@@ -17,6 +19,14 @@ def create_first_gen(circle_num, step_num, screen_name):  # Create list of circl
     return circles, steps  # List of each circle instance & list of steps for each
 
 
+def calc_fitness(square, circles, window_height):  # List of fitness values for each circle
+
+    centre_of_square = square.center()  # Coordinates for center of target square
+    # Find the euclidean distance to centre of target square for each circle
+    distances = [math.dist(item, centre_of_square) for item in [circles[i].center() for i in circles]]
+    normalised_dists = [1-(item/window_height) for item in distances]  # Normalise these distances
+
+    return normalised_dists  # List of normalised distances where list order denotes circle instance
 
 
 
