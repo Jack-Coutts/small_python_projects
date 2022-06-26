@@ -25,4 +25,28 @@ def first_gen_vectors(step_num, circle_num, start_position):
 
     return all_circle_vectors
 
-print(first_gen_vectors(100, 10, (250, 250)))
+
+def calc_fitness(all_circle_vectors, target_coordinates, window_height):
+
+    distances = []
+
+    for item in all_circle_vectors:
+
+        steps = len(item)
+        destination = item[steps-1]
+        distances.append(math.dist((int(destination[0]), int(destination[1])), list(target_coordinates)))
+
+    n_dists = [1 - (item / window_height) for item in distances]  # Normalise (divide by constant & subtract from 1)
+
+    return n_dists
+
+
+
+
+
+
+v = first_gen_vectors(100, 10, (250, 250))
+
+f = calc_fitness(v, [500, 500], 600)
+
+print(f)
