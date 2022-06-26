@@ -111,6 +111,30 @@ def reproduction(mating_pool, genes, circle_start_pos):  # Reproduction and cros
     return new_genes
 
 
+def run_gen_algo(step_num, circle_num, gen_num, start_pos, target_pos, window_height):
+
+    gen_dict = {}
+    gen_0 = first_gen_vectors(step_num, circle_num, start_pos)
+    gen_dict[0] = gen_0
+
+    for item in range(gen_num):
+
+        if item == 0:
+
+            pass
+
+        else:
+
+            genes = gen_dict[item-1]
+            fit = calc_fitness(genes, target_pos, window_height)
+            mp = natural_selection(fit)
+            new_gen = reproduction(mp, genes, start_pos)
+            gen_dict[item] = new_gen
+
+    return gen_dict
+
+
+
 v = first_gen_vectors(100, 10, [250, 250])
 
 f = calc_fitness(v, [500, 500], 600)
@@ -119,4 +143,14 @@ m = natural_selection(f)
 
 r = reproduction(m, v, [250, 250])
 
-print(r)
+#########
+
+circle_start_position = [297.5, 580]
+square_position = [20, 20]
+target_position = [25, 25]
+window_size=[600, 600]
+
+generations = run_gen_algo(100, 10, 20, circle_start_position, target_position, window_size[0])
+
+
+print(generations)
