@@ -133,7 +133,7 @@ def run_gen_algo(step_num, circle_num, gen_num, start_pos, target_pos, window_he
 
     return gen_dict
 
-#########
+#########  Report ##############
 
 circle_start_position = [297.5, 580]
 square_position = [20, 20]
@@ -144,4 +144,6 @@ generations = run_gen_algo(100, 10, 20, circle_start_position, target_position, 
 
 print(generations)
 
-#####
+
+
+#####  Visualisations in pygame ######
