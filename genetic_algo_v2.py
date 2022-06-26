@@ -133,16 +133,6 @@ def run_gen_algo(step_num, circle_num, gen_num, start_pos, target_pos, window_he
 
     return gen_dict
 
-
-
-v = first_gen_vectors(100, 10, [250, 250])
-
-f = calc_fitness(v, [500, 500], 600)
-
-m = natural_selection(f)
-
-r = reproduction(m, v, [250, 250])
-
 #########
 
 circle_start_position = [297.5, 580]
@@ -152,5 +142,6 @@ window_size=[600, 600]
 
 generations = run_gen_algo(100, 10, 20, circle_start_position, target_position, window_size[0])
 
-
 print(generations)
+
+#####
