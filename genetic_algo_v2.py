@@ -34,7 +34,7 @@ def calc_fitness(all_circle_vectors, target_coordinates, window_height):
 
         steps = len(item)
         destination = item[steps-1]
-        distances.append(math.dist((int(destination[0]), int(destination[1])), list(target_coordinates)))
+        distances.append(math.dist(destination, target_coordinates))
 
     n_dists = [1 - (item / window_height) for item in distances]  # Normalise (divide by constant & subtract from 1)
 
