@@ -5,6 +5,21 @@
 import pygame
 import random
 
+def create_first_gen(circle_num, step_num, screen_name):  # Create list of circle instances & list of steps per circle
+
+    green = (60, 179, 113)  # RGB for green
+    start_pos = (247.5, 550)  # Start position for all circles x is from left and y from top
+    diameter = 5  # Circle diameter
+    movements = [(10, 10), (10, -10), (-10, -10), (-10, 10)]  # List of possible movements
+    circles = [pygame.draw.circle(screen_name, green, start_pos, diameter) for i in range(circle_num)]  # Circles
+    steps = [[random.choice(movements)for i in range(step_num)] for i in range(circle_num)]  # Steps for circles
+
+    return circles, steps  # List of each circle instance & list of steps for each
+
+
+
+
+
 pygame.init()
 
 fpsClock = pygame.time.Clock()  # Initiate frames per second
