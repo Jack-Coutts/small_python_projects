@@ -33,7 +33,7 @@ while running:
     fpsClock.tick(10)  # 10 frames per second
 
     # Flip the display
-    pygame.display.flip()  # Not sure what it does but is essential
+    pygame.display.flip()  # Update the contents of the entire display
 
 # Done! Time to quit.
 pygame.quit()
