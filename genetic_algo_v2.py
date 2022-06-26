@@ -52,11 +52,71 @@ def natural_selection(n_dists):
     return mating_pool  # Return mating pool array
 
 
+def random_mutation(mutation_rate):  # Output true or false based on input probability
 
-v = first_gen_vectors(100, 10, (250, 250))
+    mut_num = 1/mutation_rate  # Range to guess from
+    num = random.randint(1, mut_num)  # Number to guess
+    guess = random.randint(1, mut_num)  # Guess
+
+    if num == guess:  # If guessed output True
+        return True
+    else:  # Not guessed output False
+        return False
+
+
+def crossing_over(mother, father, vectors, circle_start_pos):  # Mothers list of circles from mating pool
+
+    gene_length = len(vectors[0])
+
+    all_genes = []
+
+    for x, y in zip(mother, father):
+
+        new_gene = [[vectors[x][item][0], vectors[y][item][1]] for item in range(gene_length)]
+
+        for index, item in enumerate(new_gene):
+
+            if random_mutation(0.05):
+
+                ax = random.choice(['x','y'])
+                if ax == 'x':
+
+                    mutate = (random.randint(-index-1, index+1)*10) + circle_start_pos[0]
+                    l = list(item)
+                    l[0] = mutate
+                    l = tuple(l)
+                    item = l
+                else:
+                    mutate = (random.randint(1, index + 1) * 10) + circle_start_pos[1]
+                    l = list(item)
+                    l[1] = mutate
+                    l = tuple(l)
+                    item = l
+
+            else:
+                pass
+
+        all_genes.append(new_gene)
+
+    return all_genes
+
+
+def reproduction(mating_pool, genes, circle_start_pos):  # Reproduction and crossing over
+
+    mothers = random.sample(mating_pool, len(genes))  # Random sample from mating_pool
+    fathers = random.sample(mating_pool, len(genes))  # Random sample from mating_pool
+
+    new_genes = crossing_over(mothers, fathers, genes, circle_start_pos)
+
+    return new_genes
+
+
+v = first_gen_vectors(100, 10, [250, 250])
 
 f = calc_fitness(v, [500, 500], 600)
 
 m = natural_selection(f)
 
-print(m)
+r = reproduction(m, v, [250, 250])
+
+print(r)
