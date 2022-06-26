@@ -28,13 +28,13 @@ def first_gen_vectors(step_num, circle_num, start_position):
     moves = [10, -10]
     all_circle_vectors = []
 
-    for item in circle_num:
+    for item in range(circle_num):
 
         circle_vectors = []
         x_start = start_position[0]
         y_start = start_position[1]
 
-        for i in step_num:
+        for i in range(step_num):
 
             x_start += random.choice(moves)
             y_start += random.choice(moves)
@@ -54,7 +54,7 @@ def calc_fitness(all_circle_vectors, target_coordinates, window_height):
 
         steps = len(item)
         destination = item[steps-1]
-        distances.append(math.dist(destination, target_coordinates))
+        distances.append(math.dist((int(destination[0]), int(destination[1])), list(target_coordinates)))
 
     n_dists = [1 - (item / window_height) for item in distances]  # Normalise (divide by constant & subtract from 1)
 
@@ -102,10 +102,16 @@ def crossing_over(mother, father, vectors, circle_start_pos):  # Mothers list of
                 if ax == 'x':
 
                     mutate = (random.randint(-index-1, index+1)*10) + circle_start_pos[0]
-                    item[0] = mutate
+                    l = list(item)
+                    l[0] = mutate
+                    l = tuple(l)
+                    item = l
                 else:
                     mutate = (random.randint(1, index + 1) * 10) + circle_start_pos[1]
-                    item[1] = mutate
+                    l = list(item)
+                    l[1] = mutate
+                    l = tuple(l)
+                    item = l
 
             else:
                 pass
@@ -147,19 +153,12 @@ def run_gen_algo(step_num, circle_num, gen_num, start_pos, target_pos, window_he
 
     return gen_dict
 
+circle_start_position = (297.5, 580)
+square_position = (20, 20)
+target_position = (25, 25)
+window_size=[600, 600]
 
-
-
-
-# Use dictionary to store vecoters for all generations
-
-
-
-
-
-
-
-
+generations = run_gen_algo(100, 10, 20, circle_start_position, target_position, window_size[0])
 
 
 
