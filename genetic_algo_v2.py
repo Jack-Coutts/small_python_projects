@@ -41,7 +41,15 @@ def calc_fitness(all_circle_vectors, target_coordinates, window_height):
     return n_dists
 
 
+def natural_selection(n_dists):
 
+    mating_pool = []
+
+    for index, item in enumerate(n_dists):  # Index represents circle names
+
+        mating_pool.extend([index for i in range(int(item * 100))])  # Occur 100 * normalised distance
+
+    return mating_pool  # Return mating pool array
 
 
 
@@ -49,4 +57,6 @@ v = first_gen_vectors(100, 10, (250, 250))
 
 f = calc_fitness(v, [500, 500], 600)
 
-print(f)
+m = natural_selection(f)
+
+print(m)
