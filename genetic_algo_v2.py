@@ -74,29 +74,28 @@ def crossing_over(mother, father, vectors, circle_start_pos):  # Mothers list of
 
     for x, y in zip(mother, father):
 
-        new_gene = [[vectors[x][item][0], vectors[y][item][1]] for item in range(gene_length)]
+        new_gene = []
 
-        for index, item in enumerate(new_gene):
+        for item in range(gene_length):
+
+            coin_toss = random.choice(['x', 'y'])
 
             if random_mutation(0.05):
 
-                ax = random.choice(['x','y'])
-                if ax == 'x':
+                rand_move = [random.choice([20, -20]), random.choice([20, -20])]
 
-                    mutate = (random.randint(-index-1, index+1)*10) + circle_start_pos[0]
-                    l = list(item)
-                    l[0] = mutate
-                    l = tuple(l)
-                    item = l
+                if coin_toss == 'x':
+                    new_gene.append([sum(p) for p in zip(vectors[x][item], rand_move)])
+
                 else:
-                    mutate = (random.randint(1, index + 1) * 10) + circle_start_pos[1]
-                    l = list(item)
-                    l[1] = mutate
-                    l = tuple(l)
-                    item = l
+                    new_gene.append([sum(p) for p in zip(vectors[y][item], rand_move)])
 
             else:
-                pass
+                if coin_toss == 'x':
+
+                    new_gene.append(vectors[x][item])
+                else:
+                    new_gene.append(vectors[y][item])
 
         all_genes.append(new_gene)
 
@@ -142,7 +141,7 @@ def gen_success(gen_dictionary, target_coordinates, square_pos, square_size):
 
     report = {}
 
-    for key, value in gen_dictionary:
+    for key, value in gen_dictionary.items():
 
         distances = []
         made_it = 0
@@ -154,13 +153,10 @@ def gen_success(gen_dictionary, target_coordinates, square_pos, square_size):
             distance = math.dist(destination, target_coordinates)
             distances.append(distance)
 
-            for move in circle:
-
-                if move[0] in list(range(square_pos[0], square_size+1)) and move[1] in list(range(square_pos[1], square_size+1)):
-
-                    made_it += 1
-                else:
-                    pass
+            if destination[0] in list(range(square_pos[0], square_pos[0] + (square_size+1))) and destination[1] in list(range(square_pos[1], square_pos[1] + (square_size+1))):
+                made_it += 1
+            else:
+                pass
 
         average = sum(distances)/len(distances)
 
@@ -173,11 +169,19 @@ circle_start_position = [297.5, 580]
 square_position = [20, 20]
 square_size = 10
 target_position = [25, 25]
-window_size=[600, 600]
+window_size = [600, 600]
 
-generations = run_gen_algo(100, 10, 20, circle_start_position, target_position, window_size[0])
+circle_num = 100
+gen_num = 100
+step_num = 100
 
-print(generations)
+generations = run_gen_algo(step_num, circle_num, gen_num, circle_start_position, target_position, window_size[0])
+
+success = gen_success(generations, target_position, square_position, square_size)
+
+for key, value in success.items():
+
+    print(key, value)
 
 
 
