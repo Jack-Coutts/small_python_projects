@@ -1,6 +1,7 @@
 import random
 import math
 
+
 # Create individuals
 class Individual:
 
@@ -69,6 +70,7 @@ class Child(Individual):
         self.xy = new_position  # Update xy with new positions
         self.x = new_position[0]  # Update x with new position
         self.y = new_position[1]  # Update y with new position
+        self.move_history.append[self.xy]  # Update move history
 
 
 # Target box
@@ -99,6 +101,46 @@ def move_first_gen(num_of_circles, num_of_moves, start_pos):
         circle_lst.append(circle)
 
     return circle_lst
+
+
+def calc_fitness(circle, square, window_height):
+
+    distance = math.dist(circle.xy, square.center_xy)  # Euclidean distance
+    normalised_dist = 1-(distance - window_height)
+    return normalised_dist
+
+
+def natural_selection(circle_lst, square, window_height):
+
+    reached_square = []
+    mating_pool = []
+    n_dists = []
+
+    for circle in circle_lst:
+
+        if circle.check_square(square):
+            reached_square += 1
+            fit = calc_fitness(circle, square, window_height)
+            n_dists.append(fit)
+        else:
+            fit = calc_fitness(circle, square, window_height)
+            n_dists.append(fit)
+
+    for index, item in enumerate(n_dists):  # Index represents circle names
+
+        mating_pool.extend([index for i in range(int(item * 100))])  # Occur 100 * normalised distance
+
+    mothers = random.sample(mating_pool, len(circle_lst))  # Random sample of mating pool for mothers
+    fathers = random.sample(mating_pool, len(circle_lst))  # Random sample of mating pool for fathers
+
+    return mothers, fathers
+
+
+def next_generation():
+
+    pass
+
+
 
 
 def move_child_gen():
