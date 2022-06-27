@@ -81,36 +81,18 @@ def move_first_gen(num_of_circles, num_of_moves, start_pos):
     return circle_lst
 
 
-
-    pass
-
-
 def move_child_gen():
 
     pass
 
 
+circles = move_first_gen(10, 10, [10, 10])
+
+for item in circles:
+
+    print(item.move_history)
 
 
 
-mother = Individual([10, 15], 5)
-father = Individual([10, 15], 5)
-
-mother.move(10)
-mother.move(10)
-mother.move(10)
-
-father.move(10)
-father.move(10)
-father.move(10)
-
-
-baby = Child([10, 15], 5, 1)
-
-baby.crossing_over(father, mother)
-
-
-
-print(baby.future)
 
 
