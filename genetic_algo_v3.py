@@ -1,40 +1,116 @@
-
 import random
 
-# Define function for optimisation
-def sum_listed_vectors(initial_position, list_of_coordinate):  # Finds final position given after list of moves
+
+# Create individuals
+class Individual:
+
+    # Initiate constructor
+    def __init__(self, xy, diameter):  # Input xy coordinates [x, y] and diameter
+        self.xy = xy
+        self.x = xy[0]  # Can call x or y individually
+        self.y = xy[1]
+        self.size = diameter
+        self.move_history = []
+        self.generation = 0
+
+    # Move circle
+    def move(self, move_size):  # Input size of possible moves
+
+        possible_moves = [move_size, -move_size]  # Positive and negative moves
+        new_position = [self.x + random.choice(possible_moves), self.y + random.choice(possible_moves)]
+        self.move_history.append(self.xy)  # Keep record of old positions
+        self.xy = new_position  # Update xy with new positions
+        self.x = new_position[0]  # Update x with new position
+        self.y = new_position[1]  # Update y with new position
+
+
+# Children - all individuals after first generation
+class Child(Individual):
+
+    def __init__(self, xy, diameter, generation):
+        Individual.__init__(self, xy, diameter)
+        self.generation = generation
+        self.future = []
+
+    def crossing_over(self, father, mother):
+
+        future_moves = []
+
+        for item in range(len(father.move_history)):
+
+            if item % 2 == 0:
+                future_moves.append(father.move_history[item])
+            else:
+                future_moves.append(mother.move_history[item])
+
+        self.future = future_moves
+
+    def next_move(self, prev_moves):
+
+        new_position = self.future[prev_moves]
+        self.xy = new_position  # Update xy with new positions
+        self.x = new_position[0]  # Update x with new position
+        self.y = new_position[1]  # Update y with new position
+
+
+# Target box
+class TargetSquare:
+
+    def __init__(self, center_xy, side_len):
+
+        self.center_xy = center_xy
+        self.side_len = side_len
+        self.x_range = list(range(center_xy[0] - (side_len/2), center_xy[0] + (side_len/2)))
+        self.y_range = list(range(center_xy[1] - (side_len/2), center_xy[1] + (side_len/2)))
+
+
+def move_first_gen(num_of_circles, num_of_moves, start_pos):
+
+    circle_lst = []
+
+    for index in range(num_of_circles):
+
+        circle = Individual(start_pos, 5)
+
+        for move in range(num_of_moves):
+
+            circle.move(10)
+
+        circle_lst.append(circle)
+
+    return circle_lst
+
 
 
     pass
 
 
-def create_individual(move_num, max_move):  # Create individual with all moves they will make
+def move_child_gen():
 
-    moves = [[random.randint(1, max_move + 1), random.randint(1, max_move + 1)] for item in range(move_num)]
-
-    return moves  # Return list of [x_move, y_move] for number of moves. Moves size randint from max_move.
-
-
-def create_population(pop_number, move_num, max_move):  # Create multiple individuals.
-
-    population = [create_individual(move_num, max_move) for i in range(pop_number)]
-
-    return population  # List of lists. Each sublist is an individual.
-
-
-def target_square(square_centre, side_length):  # Define the x & y coordinates that the square covers
-
-    x_range = list(range(square_centre[0]-(side_length/2)))  # Square coordinates on x axis
-    y_range = list(range(square_centre[1]-(side_length/2)))  # Square coordinates on y axis
-
-    return x_range, y_range  # Return two lists, one per axis, containing possible target coordinates
+    pass
 
 
 
-# Testing
 
-ind = create_individual(20, 10)
 
-pop = create_population(10, 10, 10)
+mother = Individual([10, 15], 5)
+father = Individual([10, 15], 5)
 
-print(pop)
+mother.move(10)
+mother.move(10)
+mother.move(10)
+
+father.move(10)
+father.move(10)
+father.move(10)
+
+
+baby = Child([10, 15], 5, 1)
+
+baby.crossing_over(father, mother)
+
+
+
+print(baby.future)
+
+
