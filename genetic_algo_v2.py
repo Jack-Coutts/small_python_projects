@@ -2,6 +2,8 @@ import pygame
 import random
 import math
 
+# Genetic Algorithm
+
 
 def first_gen_vectors(step_num, circle_num, start_position):
 
@@ -133,10 +135,43 @@ def run_gen_algo(step_num, circle_num, gen_num, start_pos, target_pos, window_he
 
     return gen_dict
 
-#########  Report ##############
+# Report/Summary
+
+
+def gen_success(gen_dictionary, target_coordinates, square_pos, square_size):
+
+    report = {}
+
+    for key, value in gen_dictionary:
+
+        distances = []
+        made_it = 0
+
+        for circle in value:
+
+            steps = len(circle)
+            destination = circle[steps-1]
+            distance = math.dist(destination, target_coordinates)
+            distances.append(distance)
+
+            for move in circle:
+
+                if move[0] in list(range(square_pos[0], square_size+1)) and move[1] in list(range(square_pos[1], square_size+1)):
+
+                    made_it += 1
+                else:
+                    pass
+
+        average = sum(distances)/len(distances)
+
+        report[f'Generation {key}'] = f' Average distance to square = {average}, num reached square = {made_it}'
+
+    return report
+
 
 circle_start_position = [297.5, 580]
 square_position = [20, 20]
+square_size = 10
 target_position = [25, 25]
 window_size=[600, 600]
 
@@ -146,4 +181,4 @@ print(generations)
 
 
 
-#####  Visualisations in pygame ######
+# Visualisations in pygame
