@@ -1,5 +1,5 @@
 import random
-
+import math
 
 # Create individuals
 class Individual:
@@ -22,6 +22,13 @@ class Individual:
         self.xy = new_position  # Update xy with new positions
         self.x = new_position[0]  # Update x with new position
         self.y = new_position[1]  # Update y with new position
+
+    def check_square(self, square):  # Check whether individual in square
+
+        if self.y in square.y_range and self.x in square.x_range:
+            return True
+        else:
+            return False
 
 
 # Children - all individuals after first generation
@@ -71,8 +78,10 @@ class TargetSquare:
 
         self.center_xy = center_xy
         self.side_len = side_len
-        self.x_range = list(range(center_xy[0] - (side_len/2), center_xy[0] + (side_len/2)))
-        self.y_range = list(range(center_xy[1] - (side_len/2), center_xy[1] + (side_len/2)))
+        self.x = center_xy[0]
+        self.y = center_xy[1]
+        self.x_range = list(range(math.floor((self.x - (side_len/2))), math.floor((self.x + (side_len/2)))))
+        self.y_range = list(range(math.floor((self.y - (side_len/2))), math.floor((self.y + (side_len/2)))))
 
 
 def move_first_gen(num_of_circles, num_of_moves, start_pos):
@@ -97,12 +106,20 @@ def move_child_gen():
     pass
 
 
+
+
+
+square = TargetSquare([25, 25], 10)
+
+
+
 circles = move_first_gen(10, 10, [10, 10])
 
 for item in circles:
 
     print(item.move_history)
 
+print(circles[0].check_square(square))
 
 
 
