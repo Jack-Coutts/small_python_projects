@@ -16,7 +16,7 @@ class Individual:
     # Move circle
     def move(self, move_size):  # Input size of possible moves
 
-        possible_moves = [move_size, -move_size]  # Positive and negative moves
+        possible_moves = list(range(-move_size, move_size))  # Positive and negative moves
         new_position = [self.x + random.choice(possible_moves), self.y + random.choice(possible_moves)]
         self.move_history.append(self.xy)  # Keep record of old positions
         self.xy = new_position  # Update xy with new positions
@@ -32,16 +32,27 @@ class Child(Individual):
         self.generation = generation
         self.future = []
 
-    def crossing_over(self, father, mother):
+    def crossing_over(self, father, mother, move_size, mutation_rate):
 
         future_moves = []
 
         for item in range(len(father.move_history)):
 
+            coin_toss = random.choice(random.choice(list(range(1/mutation_rate))))  # Determine whether mutation
+
             if item % 2 == 0:
-                future_moves.append(father.move_history[item])
+                if coin_toss == 1:
+                    future_moves.append(father.move_history[item])
+                else:
+                    future_moves.append([item * random.choice(list(range(-move_size, move_size))),
+                                         item * random.choice(list(range(-move_size, move_size)))])  # Mutation
+
             else:
-                future_moves.append(mother.move_history[item])
+                if coin_toss == 1:
+                    future_moves.append(mother.move_history[item])
+                else:
+                    future_moves.append([item * random.choice(list(range(-move_size, move_size))),
+                                         item * random.choice(list(range(-move_size, move_size)))])  # Mutation
 
         self.future = future_moves
 
