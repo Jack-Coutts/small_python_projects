@@ -179,7 +179,7 @@ def generations(gen_number, square, circle_num, move_num,
             circles = move_first_gen(circle_num, move_num, start_pos, move_size)
             mothers, fathers, reached_square, av_n_dist = natural_selection(circles, square, window_height)
 
-            n_dists.append(av_n_dist)
+            n_dists.append(round(av_n_dist, 2))
             made_it.append(reached_square)
 
             children = next_generation(mothers, fathers, circles, 1, mutation_rate, start_pos)
@@ -192,7 +192,8 @@ def generations(gen_number, square, circle_num, move_num,
 
             cir = generation[number-1]
             mothers, fathers, reached_square, av_n_dist = natural_selection(cir, square, window_height)
-            n_dists.append(av_n_dist)
+
+            n_dists.append(round(av_n_dist, 2))
             made_it.append(reached_square)
 
             children = next_generation(mothers, fathers, cir, 1, mutation_rate, start_pos)
@@ -208,10 +209,10 @@ mutation_rate = 0.05
 start_pos = [400, 400]
 square_center = [25, 25]
 sq_side_len = 10
-move_num = 500
-circle_num = 100
+move_num = int(input('Number of steps: '))
+circle_num = int(input('Number of circles: '))
 window_height = 600
-gen_number = 1000
+gen_number = int(input('Number of generations: '))
 
 
 # Test
@@ -219,5 +220,7 @@ square = TargetSquare(square_center, sq_side_len)
 
 nd, mi = generations(gen_number, square, circle_num, move_num, start_pos, move_size, window_height, mutation_rate)
 
-
-print(mi)
+print()
+print(f'Number of circles that reached the square each generation: \n{mi}')
+print()
+print(f'Average normalised distance for each generation (Higher = Closer): \n{nd}')
