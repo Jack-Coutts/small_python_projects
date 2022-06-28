@@ -7,12 +7,12 @@ class Individual:
 
     # Initiate constructor
     def __init__(self, xy, diameter):  # Input xy coordinates [x, y] and diameter
-        self.xy = xy
+        self.xy = xy  # [x, y] coordinates
         self.x = xy[0]  # Can call x or y individually
         self.y = xy[1]
-        self.size = diameter
-        self.move_history = []
-        self.generation = 0
+        self.size = diameter  # Diameter of circle
+        self.move_history = []  # Each previous move made by circle
+        self.generation = 0  # Which generation
 
     # Move circle
     def move(self, move_size):  # Input size of possible moves
@@ -26,7 +26,7 @@ class Individual:
 
     def check_square(self, square):  # Check whether individual in square
 
-        if self.y in square.y_range and self.x in square.x_range:
+        if self.y in square.y_range and self.x in square.x_range:  # Square class has these attributes
             return True
         else:
             return False
@@ -35,39 +35,39 @@ class Individual:
 # Children - all individuals after first generation
 class Child(Individual):
 
-    def __init__(self, xy, diameter, generation):
+    def __init__(self, xy, diameter, generation):  # Must input generation number here
         Individual.__init__(self, xy, diameter)
         self.generation = generation
-        self.move_history = []
-        self.future = []
+        self.move_history = []  # Also has move history
+        self.future = []  # Future moves created from parents
 
-    def crossing_over(self, father, mother, move_size, mutation_rate):
+    def crossing_over(self, father, mother, move_size, mutation_rate):  # Reproduction from parents
 
-        future_moves = []
+        future_moves = []  # Moves inherited from parents
 
-        for item in range(len(father.move_history)):
+        for item in range(len(father.move_history)):  # Iterate over each step/move
 
             coin_toss = random.choice(list(range(int(1/mutation_rate))))  # Determine whether mutation
 
-            if item % 2 == 0:
+            if item % 2 == 0:  # Even move indexes from father
                 if coin_toss != 1:
-                    future_moves.append(father.move_history[item])
-                else:
+                    future_moves.append(father.move_history[item])  # No mutation
+                else:  # Mutation
                     future_moves.append([item * random.choice(list(range(-move_size, move_size))),
                                          item * random.choice(list(range(-move_size, move_size)))])  # Mutation
 
-            else:
-                if coin_toss != 1:
+            else:  # Odd move indexes from mother
+                if coin_toss != 1:  # No mutation
                     future_moves.append(mother.move_history[item])
-                else:
+                else:  # Mutation
                     future_moves.append([item * random.choice(list(range(-move_size, move_size))),
                                          item * random.choice(list(range(-move_size, move_size)))])  # Mutation
 
-        self.future = future_moves
+        self.future = future_moves  # Add inherited future moves to circle attributes
 
-    def next_move(self, prev_moves):
+    def next_move(self, prev_moves):  # Move along list of future moves
 
-        new_position = self.future[prev_moves]
+        new_position = self.future[prev_moves]  # Select which move to make
         self.xy = new_position  # Update xy with new positions
         self.x = new_position[0]  # Update x with new position
         self.y = new_position[1]  # Update y with new position
@@ -79,53 +79,53 @@ class TargetSquare:
 
     def __init__(self, center_xy, side_len):
 
-        self.center_xy = center_xy
-        self.side_len = side_len
-        self.x = center_xy[0]
-        self.y = center_xy[1]
-        self.x_range = list(range(math.floor((self.x - (side_len/2))), math.floor((self.x + (side_len/2)))))
-        self.y_range = list(range(math.floor((self.y - (side_len/2))), math.floor((self.y + (side_len/2)))))
+        self.center_xy = center_xy  # Center coordinates of the ssquare
+        self.side_len = side_len  # Length of square sides
+        self.x = center_xy[0]  # x center
+        self.y = center_xy[1]  # y center
+        self.x_range = list(range(math.floor((self.x - (side_len/2))), math.floor((self.x + (side_len/2)))))  # x side
+        self.y_range = list(range(math.floor((self.y - (side_len/2))), math.floor((self.y + (side_len/2)))))  # y side
 
 
-def move_first_gen(num_of_circles, num_of_moves, start_pos, move_size):
+def move_first_gen(num_of_circles, num_of_moves, start_pos, move_size):  # Move first generation of circles
 
-    circle_lst = []
+    circle_lst = []  # Create each circle
 
-    for index in range(num_of_circles):
+    for index in range(num_of_circles):  # Iterate of num of circles
 
-        circle = Individual(start_pos, 5)
+        circle = Individual(start_pos, 5)  # Create a circle
 
-        for move in range(num_of_moves):
+        for move in range(num_of_moves):  # Iterate over move num
 
-            circle.move(move_size)
+            circle.move(move_size)  # Make all moves
 
-        circle_lst.append(circle)
+        circle_lst.append(circle)  # Add created circles to list
 
-    return circle_lst
+    return circle_lst  # Return list of moves circles
 
 
-def calc_fitness(circle, square, window_height):
+def calc_fitness(circle, square, window_height):  # Determine fitness of moved circle
 
     distance = math.dist(circle.xy, square.center_xy)  # Euclidean distance
-    normalised_dist = 1-(distance / window_height)
+    normalised_dist = 1-(distance / window_height)  # Normalise distance measures
     return normalised_dist
 
 
-def natural_selection(circle_lst, square, window_height):
+def natural_selection(circle_lst, square, window_height):  # Select best circles for reproduction
 
-    reached_square = 0
-    mating_pool = []
-    n_dists = []
+    reached_square = 0  # Number of circles hitting the square
+    mating_pool = []  # Pool of circles to select from for mating
+    n_dists = []  # Normalised distance for each circle
 
-    for circle in circle_lst:
+    for circle in circle_lst:  # Iterate over circles
 
-        if circle.check_square(square):
-            reached_square += 1
-            fit = calc_fitness(circle, square, window_height)
-            n_dists.append(fit)
-        else:
-            fit = calc_fitness(circle, square, window_height)
-            n_dists.append(fit)
+        if circle.check_square(square):  # Check whether circle in square
+            reached_square += 1  # Count of circles reaching square
+            fit = calc_fitness(circle, square, window_height)  # Calc fitness
+            n_dists.append(fit)  # Add fitness
+        else:  # Circle not reaches square
+            fit = calc_fitness(circle, square, window_height)  # Calc fitness
+            n_dists.append(fit)  # Add fitness
 
     for index, item in enumerate(n_dists):  # Index represents circle names
 
@@ -134,76 +134,78 @@ def natural_selection(circle_lst, square, window_height):
     mothers = random.sample(mating_pool, len(circle_lst))  # Random sample of mating pool for mothers
     fathers = random.sample(mating_pool, len(circle_lst))  # Random sample of mating pool for fathers
 
-    av_n_dist = sum(n_dists)/len(n_dists)
+    av_n_dist = sum(n_dists)/len(n_dists)  # Average normalised distance for this generation
 
-    return mothers, fathers, reached_square, av_n_dist
-
-
-def next_generation(mothers, fathers, circle_lst, generation, mutation_rate, start_pos):
-
-    children = []
-
-    for mother, father in zip(mothers, fathers):
-
-        child = Child(start_pos, 5, generation)
-        child.crossing_over(circle_lst[father], circle_lst[mother], move_size, mutation_rate)
-        children.append(child)
-
-    return children
+    return mothers, fathers, reached_square, av_n_dist  # Return selected mothers & fathers, num successful & n_dists
 
 
-def move_children(children):
+def next_generation(mothers, fathers, circle_lst, generation, mutation_rate, start_pos):  # Create next gen
 
-    move_num = len(children[0].future)
+    children = []  # List of child circles
 
-    for child in children:
+    for mother, father in zip(mothers, fathers):  # Iterate over parents
 
-        for move in range(move_num):
+        child = Child(start_pos, 5, generation)  # create child
+        child.crossing_over(circle_lst[father], circle_lst[mother], move_size, mutation_rate)  # Inherit moves
+        children.append(child)  # Add child to list
 
-            child.next_move(move)
+    return children  # List of child generation
 
-    return children
+
+def move_children(children):  # Move child generations
+
+    move_num = len(children[0].future)  # Num of moves
+
+    for child in children:  # Iterate over children
+
+        for move in range(move_num):  # Iterate over moves
+
+            child.next_move(move)  # Move child
+
+    return children  # Return children
 
 
 def generations(gen_number, square, circle_num, move_num,
-                start_pos, move_size, window_height, mutation_rate ):
+                start_pos, move_size, window_height, mutation_rate ):  # Run the program
 
     n_dists = []
     made_it = []
     generation = []
 
-    for number in range(gen_number):
+    for number in range(gen_number):  # Iterate over generations
 
-        if number == 0:
+        if number == 0:  # First generation
 
-            circles = move_first_gen(circle_num, move_num, start_pos, move_size)
-            mothers, fathers, reached_square, av_n_dist = natural_selection(circles, square, window_height)
+            circles = move_first_gen(circle_num, move_num, start_pos, move_size)  # Create/move circles
+            mothers, fathers, reached_square, av_n_dist = natural_selection(circles, square, window_height)  # Select
 
-            n_dists.append(round(av_n_dist, 2))
-            made_it.append(reached_square)
+            n_dists.append(round(av_n_dist, 2))  # Add average distance for generation
+            made_it.append(reached_square)  # Add number reaching square
 
-            children = next_generation(mothers, fathers, circles, 1, mutation_rate, start_pos)
+            children = next_generation(mothers, fathers, circles, 1, mutation_rate, start_pos)  # Create children
 
-            move_children(children)
+            move_children(children)  # Move children
 
-            generation.append(children)
+            generation.append(children)  # Add generation to llist of generations
 
-        else:
+        else:  # Child generations
 
-            cir = generation[number-1]
-            mothers, fathers, reached_square, av_n_dist = natural_selection(cir, square, window_height)
+            cir = generation[number-1]  # Select circles
+            mothers, fathers, reached_square, av_n_dist = natural_selection(cir, square, window_height)  # Select
 
-            n_dists.append(round(av_n_dist, 2))
-            made_it.append(reached_square)
+            n_dists.append(round(av_n_dist, 2))  # Add average distance for generation
+            made_it.append(reached_square)  # Add number reaching square
 
-            children = next_generation(mothers, fathers, cir, 1, mutation_rate, start_pos)
-            move_children(children)
+            children = next_generation(mothers, fathers, cir, 1, mutation_rate, start_pos)  # Create children
 
-            generation.append(children)
+            move_children(children)  # Move children
 
-    return n_dists, made_it
+            generation.append(children)  # Add generation to llist of generations
+
+    return n_dists, made_it  # Output ave dist per generation and number of circles hitting the square
 
 
+# Parameters
 move_size = 50
 mutation_rate = 0.05
 start_pos = [400, 400]
@@ -214,12 +216,12 @@ circle_num = int(input('Number of circles: '))
 window_height = 600
 gen_number = int(input('Number of generations: '))
 
-
-# Test
+# Run program
 square = TargetSquare(square_center, sq_side_len)
 
 nd, mi = generations(gen_number, square, circle_num, move_num, start_pos, move_size, window_height, mutation_rate)
 
+# Output information
 print()
 print(f'Number of circles that reached the square each generation: \n{mi}')
 print()
