@@ -1,5 +1,7 @@
-# Simple genetic algorithms moving circles to squares.
+### Simple genetic algorithms moving circles to squares.
 
-- Simple algorithm with visualisation using turtle. This works but is far too slow.
-- Version 3 is more complex/efficient and uses classes. Functional but circles are not hitting the square. No visualisation.
-- Visualisation with pygame would be a good next step.
+Two genetic algorithms for moving a population of circles towards a target square:
+
+- turtle_genetic_algo.py only uses function and visualises the process using the turtle module.
+- genetic_algo_v3.py uses functions to create the population, outputs text summaries. 
+- Next step is to add pygame visualisations to genetic_algo_v3.py. 
