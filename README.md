@@ -1,4 +1,4 @@
-### Simple genetic algorithms moving circles to squares.
+## Simple genetic algorithms moving circles to squares.
 
 Two genetic algorithms for moving a population of circles towards a target square:
 
