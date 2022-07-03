@@ -1,6 +1,6 @@
-## Collection of projects trying out different things.
+# Collection of projects trying out different things.
 ---
-Each subdirectory has their own README file.
+### Each subdirectory has their own README file.
 ---
 1. Genetic Algorithms 
 2. 
