@@ -1,4 +1,4 @@
-## Writing simple genetic algorithms moving circles to squares from scratch.
+## Writing simple genetic algorithms from scratch.
 
 Two genetic algorithms for moving a population of circles towards a target square:
 
